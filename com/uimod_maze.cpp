@@ -46,7 +46,7 @@ pb_msg_ptr_t maze_init() {
         1, 0, 0, 0,
         0, 0, 1, 1,
         1, 1, 1, 1,
-    }, std::make_pair(1, 2), std::make_pair(4, 1));
+    }, std::make_pair(0, 2), std::make_pair(3, 1));
 
     update_pixels();
     return res;

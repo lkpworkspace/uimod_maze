@@ -2,17 +2,17 @@
 #include <stdint.h>
 #include <vector>
 #include <algorithm>
-
+#include <glog/logging.h>
 #include <jsoncpp/json/json.h>
 
 namespace maze {
 
 const uint32_t WALL_COLOR = 0xffffffff;
-const uint32_t LEAD_COLOR = 0xffff00ff;
-const uint32_t MOVE_COLOR = 0xff00ffff;
-const uint32_t MOVED_COLOR = 0xff00ffff;
+const uint32_t LEAD_COLOR = 0xff00ffff;
+const uint32_t MOVE_COLOR = 0x0;
+const uint32_t MOVED_COLOR = 0x0;
 const uint32_t ROAD_COLOR = 0x0;
-const uint32_t OUT_COLOR = 0xff00ffff;
+const uint32_t OUT_COLOR = 0x0;
 
 enum class MoveDir : int {
     MV_LEFT,
@@ -44,6 +44,7 @@ public:
         }
         _mat_flag = mat;
         _start = start_pos;
+        _lead = start_pos;
         _end = end_pos;
         for (int i = 0; i < _mat_flag.size(); ++i) {
             if (_mat_flag[i]) {
@@ -61,10 +62,10 @@ public:
         switch (dir)
         {
         case MoveDir::MV_LEFT:
-            pos.first += 1;
+            pos.first -= 1;
             break;
         case MoveDir::MV_RIGHT:
-            pos.first -= 1;
+            pos.first += 1;
             break;
         case MoveDir::MV_UP:
             pos.second -= 1;
@@ -73,6 +74,8 @@ public:
             pos.second += 1;
             break;
         }
+        LOG(INFO) << "from (" << _lead.first << "," << _lead.second << ") to (" 
+            << pos.first << "," << pos.second << ")";
         if (pos.first < 0 || pos.first >= _width || pos.second < 0 || pos.second >= _height) {
             return MoveState::MV_NO;
         }
