@@ -29,6 +29,17 @@ static void update_pixels() {
     sfe::SFEPanel::SendMessage("uimod_maze", "bitmap", v);
 }
 
+static void update_state(maze::MoveState state) {
+    Json::Value v;
+    v["command"] = "maze_state";
+    std::string str_state = "";
+    if (state == maze::MoveState::MV_OUT) {
+        str_state = "win";
+    }
+    v["state"] = str_state;
+    sfe::SFEPanel::SendMessage("uimod_maze", "panel_maze", v);
+}
+
 pb_msg_ptr_t create_msg(const std::string& msg_name) {
     if (g_msg_map.find(msg_name) == g_msg_map.end()) {
         return nullptr;
@@ -55,32 +66,36 @@ pb_msg_ptr_t maze_init() {
 pb_msg_ptr_t move_left() {
     auto res = std::make_shared<bp::Bool>();
     res->set_var(true);
-    g_maze.Move(maze::MoveDir::MV_LEFT);
+    auto state = g_maze.Move(maze::MoveDir::MV_LEFT);
     update_pixels();
+    update_state(state);
     return res;
 }
 
 pb_msg_ptr_t move_right() {
     auto res = std::make_shared<bp::Bool>();
     res->set_var(true);
-    g_maze.Move(maze::MoveDir::MV_RIGHT);
+    auto state = g_maze.Move(maze::MoveDir::MV_RIGHT);
     update_pixels();
+    update_state(state);
     return res;
 }
 
 pb_msg_ptr_t move_up() {
     auto res = std::make_shared<bp::Bool>();
     res->set_var(true);
-    g_maze.Move(maze::MoveDir::MV_UP);
+    auto state = g_maze.Move(maze::MoveDir::MV_UP);
     update_pixels();
+    update_state(state);
     return res;
 }
 
 pb_msg_ptr_t move_down() {
     auto res = std::make_shared<bp::Bool>();
     res->set_var(true);
-    g_maze.Move(maze::MoveDir::MV_DOWN);
+    auto state = g_maze.Move(maze::MoveDir::MV_DOWN);
     update_pixels();
+    update_state(state);
     return res;
 }
 
